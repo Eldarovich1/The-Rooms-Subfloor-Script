@@ -11,6 +11,24 @@ local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 task.wait(2)
 
+-- SOFT SPEED +15
+local BOOST = 15
+
+local function applyBoost()
+    local char = LocalPlayer.Character
+    if not char then return end
+    char:SetAttribute("SpeedBoostExtra", BOOST)
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if hum and hum.WalkSpeed > 0 then
+        hum.WalkSpeed = 16 + BOOST   -- итого 31
+    end
+end
+
+if LocalPlayer.Character then
+    applyBoost()
+end
+LocalPlayer.CharacterAdded:Connect(applyBoost)
+
 local PathfindingService = game:GetService("PathfindingService")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
@@ -90,7 +108,8 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
             PauseLabel.Visible = true
             local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
             if humanoid then
-                humanoid.WalkSpeed = 16
+                task.wait(0.1)
+                applyBoost()
                 humanoid:Move(Vector3.new(0, 0, 0), true)
             end
             if isSafeInBunker and savedPosition then
@@ -570,6 +589,7 @@ RenderConnection = RunService.PreRender:Connect(function()
     local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
     local hrp = LocalPlayer.Character.HumanoidRootPart
     if not humanoid then return end
+    applyBoost()
 
     local now = os.clock()
 
@@ -657,7 +677,9 @@ RenderConnection = RunService.PreRender:Connect(function()
             forceRecomputePath = true
         end
         if a120Mode == "navigating" or (a120Mode == "none" and not isReturning) then
-            humanoid.WalkSpeed = 21.5
+            if humanoid then
+            applyBoost()
+            end
             hrp.CFrame = CFrame.lookAt(hrp.Position, Vector3.new(currentTarget.X, hrp.Position.Y, currentTarget.Z))
             humanoid:Move(dir.Magnitude > 1.2 and dir.Unit or Vector3.new(0, 0, 0), true)
         end
