@@ -783,7 +783,7 @@ RenderConnection = RunService.PreRender:Connect(function()
                     currentTarget = nil
                     forceRecomputePath = true
                     -- FIX #3: Алерт СРАЗУ до wait
-                    AlertLabel.Text = "🚨 А-60! УХОДИМ НАВЕРХ... 🚨"
+                    AlertLabel.Text = "🚨 А-60! 🚨"
                     AlertLabel.Visible = true
                     currentTrackingEntity = Entity
                     lockTimer = os.clock()
